@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>可调层数动态树</title>
+    <style>
+        canvas {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            margin: 10px;
+        }
+        .controls {
+            margin: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 5px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="number" id="treeDepth" min="1" max="15" value="5" placeholder="输入层数">
+        <button onclick="generateTree()">spanning tree</button>
+    </div>
+    <canvas id="treeCanvas" width="1200" height="800"></canvas>
+
+    <script>
+        class DynamicTree {
+            constructor(ctx) {
+                this.ctx = ctx;
+                this.nodeHistory = [];
+            }
+
+            draw(fromX, fromY, length, angle, width, depth) {
+                if (depth <= 0) return;
+
+                const toX = fromX + Math.cos(angle) * length;
+                const toY = fromY + Math.sin(angle) * length;
+
+                this.drawBranch(fromX, fromY, toX, toY, width, depth);
+
+                const newParent = { x: toX, y: toY, depth: depth - 1 };
+                this.nodeHistory.push(newParent);
+
+                this.createChildren(newParent, length * 0.65, width * 0.7, angle);
+            }
+
+            drawBranch(fromX, fromY, toX, toY, width, depth) {
+                this.ctx.save();
+                this.ctx.lineWidth = width;
+                this.ctx.strokeStyle = this.getColor(depth);
+                this.ctx.lineCap = 'round';
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(fromX, fromY);
+                this.ctx.lineTo(toX, toY);
+                this.ctx.stroke();
+                
+                this.ctx.beginPath();
+                this.ctx.arc(toX, toY, width/4, 0, Math.PI*2);
+                this.ctx.fillStyle = '#fff';
+                this.ctx.fill();
+                
+                this.ctx.restore();
+            }
+
+            createChildren(parent, length, width, parentAngle) {
+                const angleVariation = 35 * Math.PI/180;
+                const depth = parent.depth;
+
+                this.draw(
+                    parent.x, parent.y,
+                    length,
+                    parentAngle - angleVariation + this.randomAngle(depth),
+                    width,
+                    depth
+                );
+
+                this.draw(
+                    parent.x, parent.y,
+                    length,
+                    parentAngle + angleVariation + this.randomAngle(depth),
+                    width,
+                    depth
+                );
+            }
+
+            randomAngle(depth) {
+                return (Math.random() - 0.5) * (10 - depth) * Math.PI/180;
+            }
+
+            getColor(depth) {
+                const hue = 30 + (10 - depth) * 8;
+                return `hsl(${hue}, 70%, ${50 - depth*4}%)`;
+            }
+        }
+
+        // 初始化
+        const canvas = document.getElementById('treeCanvas');
+        const ctx = canvas.getContext('2d');
+        const tree = new DynamicTree(ctx);
+
+        // 基础配置（长度自动适配层数）
+        const baseConfig = {
+            startX: canvas.width/2,
+            startY: canvas.height - 50,
+            initAngle: -Math.PI/2,
+            initWidth: 30
+        };
+
+        // 生成树函数
+        function generateTree() {
+            // 获取输入层数
+            const inputDepth = parseInt(document.getElementById('treeDepth').value);
+            const validDepth = Math.min(Math.max(inputDepth, 1), 15); // 限制1-15层
+            
+            // 自动计算初始长度
+            const autoLength = Math.min(150, 50 + validDepth * 20);
+            
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            tree.nodeHistory = [];
+            
+            // 执行绘制
+            ctx.translate(0.5, 0.5);
+            tree.draw(
+                baseConfig.startX,
+                baseConfig.startY,
+                autoLength,
+                baseConfig.initAngle,
+                baseConfig.initWidth,
+                validDepth
+            );
+        }
+
+        // 初始生成5层树
+        generateTree();
+    </script>
+</body>
+</html>
