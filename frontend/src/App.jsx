@@ -6,10 +6,12 @@ import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import MainContent from "./components/MainContent/MainContent";
 import Footer from "./components/Footer/Footer";
+import SelectTags from "./Pages/SelectTags/SelectTags";
+import Details from "./Pages/Details/Details";
 import './index.css';
 
 const App = () => {
-  const location = useLocation();   
+  const location = useLocation();
 
   const isSignupPage = location.pathname === "/signup";
 
@@ -18,12 +20,13 @@ const App = () => {
       {!isSignupPage && <Header />}
 
       <div className={styles.content}>
-        {!isSignupPage && <Sidebar />}
 
         <main className={styles.main}>
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<MainContent />} />
+            <Route path="/selectTags" element={<SelectTags />} />
+            <Route path="/details/:id" element={<Details />} />
           </Routes>
         </main>
       </div>
