@@ -2,11 +2,12 @@ import React from "react";
 
 import styles from "./Signup.module.css";
 import { getImageUrl } from "../../utils";
+import {Link} from "react-router-dom";
 
 
 export const Signup = () => {
     return( <div>
-        <a className= {styles.title} href="">Mealio</a>
+        <Link className={styles.title} to="/">Mealio</Link>
         <div className={styles.container}>
         <form action="">
         <div className={styles.box}>
@@ -28,11 +29,11 @@ export const Signup = () => {
 
             <div className={styles.mybuttons}>
                 <button className={styles.cancelbtn} type="button"
-                onclick="document.getElementById('id01').style.display='none'" 
+                onClick="document.getElementById('id01').style.display='none'" 
                 class="cancelbtn">Cancel
 
                 </button>
-                <button className={styles.submitbtn} type="submit" class="signup">Sign Up
+                <button className={styles.submitbtn} type="submit" >Sign Up
 
                 </button>
             </div>
