@@ -2,6 +2,8 @@ import React from "react";
 import styles from './App.module.css';
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Signup } from "./Pages/Signup/Signup";
+import {Home} from "./Pages/Home/Home";
+import {Monday} from "./Pages/Monday/Monday";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import MainContent from "./components/MainContent/MainContent";
@@ -24,7 +26,9 @@ const App = () => {
         <main className={styles.main}>
           <Routes>
             <Route path="/signup" element={<Signup />} />
-            <Route path="/" element={<MainContent />} />
+            <Route path="/Monday" element={<Monday/>}/>
+            <Route path="/" element={<Home/>} />
+            <Route path="/MainContent" element={<MainContent />} />
             <Route path="/selectTags" element={<SelectTags />} />
             <Route path="/details/:id" element={<Details />} />
           </Routes>
