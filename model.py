@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import string
+import re
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meals.db'
@@ -211,17 +212,12 @@ def get_cooking_time(s):
     :return: The total cooking time in minutes as an integer
     """
     sum_minutes = 0
-    lines = s.split('\n')
+    
 
-    for line in lines:
-        if 'minutes' or 'minute' in line:
-            words = line.split()
-            for i in range(len(words)):
-                if words[i] == 'minutes' or words[i]=='minute' and i > 0:
-                    try:
-                        sum_minutes += int(words[i-1])
-                    except ValueError:
-                        pass
+    matches = re.findall(r'(\d+)\s*min(?:ute|s)?', s)
+
+    sum_minutes = sum(int(match) for match in matches)
+
     return sum_minutes
 
 def update_prep_time():
@@ -238,6 +234,7 @@ def update_prep_time():
             print(meal.__dict__)
         """
         print("Prep times updated successfully!")
+        print(prep_time)
 
 
 with app.app_context():
