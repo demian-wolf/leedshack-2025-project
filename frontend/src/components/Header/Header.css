@@ -1,0 +1,30 @@
+.header {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.header nav ul li {
+  margin-left: 1rem;
+}
+
+.header nav ul li a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}

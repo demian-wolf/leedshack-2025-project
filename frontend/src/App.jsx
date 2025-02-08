@@ -1,27 +1,29 @@
 import React from "react";
 import styles from './App.module.css';
-import {Route, Routes} from "react-router-dom";
+
 import {Signup} from "./Pages/Signup/Signup";
-import {Home} from "./Pages/Home/Home";
-import {Monday} from "./Pages/Monday/Monday";
 
 
 const App = () => {
+  const location = useLocation();   
+
+  const isSignupPage = location.pathname === "/signup";
+
   return (
     <div className={styles.app}>
+      {!isSignupPage && <Header />}
+
+      <div className={styles.content}>
+        {!isSignupPage && <Sidebar />}
 
         <Routes>
-        
-          <Route path="/" element={<Monday/>}/>
-          <Route path="/" element={<Home/>} />
-          
           <Route path="/" element={<Signup/>} />
-          
         </Routes>
 
+        {!isSignupPage && <Footer />}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
-
