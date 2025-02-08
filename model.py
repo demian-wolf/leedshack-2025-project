@@ -205,7 +205,6 @@ def import_all_meal():
             db.session.commit()
             print(f"Meal {item['strMeal']} starting with {letter} imported successfully!")
 
-# TODO: Wait to fix
 def get_cooking_time(s):
     """
     :param s: The input text (a string) containing the strInstructions
@@ -216,7 +215,7 @@ def get_cooking_time(s):
 
     matches = re.findall(r'(\d+)\s*min(?:ute|s)?', s)
 
-    sum_minutes = sum(int(match) for match in matches)
+    sum_minutes = max(sum(int(match) for match in matches),10)
 
     return sum_minutes
 
@@ -234,7 +233,6 @@ def update_prep_time():
             print(meal.__dict__)
         """
         print("Prep times updated successfully!")
-        print(prep_time)
 
 
 with app.app_context():
