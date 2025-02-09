@@ -1,1 +1,0 @@
-put grass.jpg, index.html and tree.js in same file, and just run index.html
