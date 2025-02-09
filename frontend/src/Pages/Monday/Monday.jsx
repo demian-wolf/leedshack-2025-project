@@ -1,7 +1,6 @@
 import React from "react";
 
 import styles from "./Monday.module.css";
-import { getImageUrl } from "../../utils";
 
 export const Monday = () => {
     return( <div className={styles.maincontainer} >

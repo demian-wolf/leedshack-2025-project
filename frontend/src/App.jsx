@@ -1,36 +1,41 @@
 import React from "react";
 import styles from './App.module.css';
+
 import { Route, Routes, useLocation } from "react-router-dom";
+
 import { Auth } from "./Pages/Auth/Auth"
 import { Home } from "./Pages/Home/Home";
 import { Monday } from "./Pages/Monday/Monday";
+import SelectTags from "./Pages/SelectTags/SelectTags";
+import Details from "./Pages/Details/Details";
+
 import Header from "./components/Header/Header";
 import MainContent from "./components/MainContent/MainContent";
 import Footer from "./components/Footer/Footer";
-import SelectTags from "./Pages/SelectTags/SelectTags";
-import Details from "./Pages/Details/Details";
+
 import './index.css';
+
 
 const App = () => {
   const location = useLocation();
-
-  const isSignupPage = location.pathname === "/signup" || location.pathname === "/login";
+  const isSignupPage = ["/signup", "/login"].includes(location.pathname);
 
   return (
     <div className={styles.app}>
       {!isSignupPage && <Header />}
 
       <div className={styles.content}>
-
         <main className={styles.main}>
           <Routes>
-            <Route path="/login" element={<Auth />} />
-            <Route path="/signup" element={<Auth />} />
-            <Route path="/Monday" element={<Monday/>}/>
             <Route path="/" element={<Home/>} />
-            <Route path="/MainContent" element={<MainContent />} />
-            <Route path="/selectTags" element={<SelectTags />} />
-            <Route path="/details/:id" element={<Details />} />
+            <Route path="/MainContent" element={<MainContent/>}/>
+
+            <Route path="/login" element={<Auth/>}/>
+            <Route path="/signup" element={<Auth/>}/>
+            
+            <Route path="/Monday" element={<Monday/>}/>
+            <Route path="/selectTags" element={<SelectTags/>}/>
+            <Route path="/details/:id" element={<Details/>}/>
           </Routes>
         </main>
       </div>
