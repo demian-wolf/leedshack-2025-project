@@ -10,7 +10,8 @@
             font-family: Arial, sans-serif;
         }
         canvas {
-            background: #f8f8f8;
+            background-image: url('./grass.jpg'); /* Use your image as a background */
+            background-size: cover;
             border: 1px solid #ddd;
             display: block;
             margin: 20px auto;
@@ -53,7 +54,8 @@
         <button class="reset" onclick="resetTree()">Reset Tree</button>
     </div>
 
-    <canvas id="treeCanvas" width="800" height="600"></canvas>
+    <!-- Canvas that uses an image as a background -->
+    <canvas id="treeCanvas" width="850" height="500"></canvas>
 
     <script src="tree.js"></script>
 

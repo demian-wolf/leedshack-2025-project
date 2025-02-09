@@ -52,17 +52,16 @@ class DynamicTree {
         const prevTree = trees[trees.length - 1];
         const lastNode = prevTree.nodeHistory[0];  // Use the root node of the previous tree
         
-        // Position the new tree slightly to the right of the previous tree
-        const newX = firstTreeEndX + 280; // 200px to the right of the previous tree's end
-        const newY = lastNode.y+100;
+        const newX = firstTreeEndX + 280; // 280px to the right of the previous tree's end
+        const newY = lastNode.y + 100;   // Move the second tree 100px down
         
-        // The new tree gets the remaining depth
         const newDepth = remainingDepth;
         
         const newTree = new DynamicTree(ctx);
         newTree.draw(newX, newY, 100, -Math.PI / 2, 30, newDepth);
         return newTree;
     }
+
 }
 
 // Initialize canvas
@@ -81,7 +80,7 @@ function generateTree() {
     
     const firstTreeDepth = Math.min(totalDepth, 7);  // First tree gets a maximum depth of 7, or less if remaining depth is smaller
     const firstTree = new DynamicTree(ctx);
-    firstTree.draw(50 + 100, canvas.height - 50, 100, -Math.PI / 2, 30, firstTreeDepth);
+    firstTree.draw(50 + 100, canvas.height -170, 100, -Math.PI / 2, 30, firstTreeDepth);
     trees.push(firstTree);
 
     // Get the end position of the first tree to place the second tree
@@ -89,7 +88,7 @@ function generateTree() {
     
     // If depth > 7, plant another tree to the right of the first tree with remaining depth
     if (totalDepth > 7) {
-        const secondTreeDepth = Math.min(totalDepth - firstTreeDepth,7);
+        const secondTreeDepth = Math.min(totalDepth - firstTreeDepth, 7);
         const secondTree = DynamicTree.plantAdditionalTree(ctx, trees, secondTreeDepth, firstTreeEndX);
         trees.push(secondTree);
         
@@ -98,13 +97,19 @@ function generateTree() {
         
         // If depth > 14, plant a third tree to the right of the second tree
         if (totalDepth > 14) {
-            const thirdTreeDepth = Math.min(totalDepth - firstTreeDepth - secondTreeDepth,7);
-            const thirdTree = DynamicTree.plantAdditionalTree(ctx, trees, thirdTreeDepth, secondTreeEndX-20);
+            const thirdTreeDepth = Math.min(totalDepth - firstTreeDepth - secondTreeDepth, 7);
+            const thirdTree = DynamicTree.plantAdditionalTree(ctx, trees, thirdTreeDepth, secondTreeEndX);
             trees.push(thirdTree);
         }
     }
 
-    // Save the trees array to LocalStorage
+    if (trees.length > 1) {
+        const secondTree = trees[1];
+    }
+    if (trees.length > 2) {
+        const thirdTree = trees[2];
+    }
+
     saveTree(trees);
 }
 
