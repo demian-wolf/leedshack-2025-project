@@ -1,8 +1,11 @@
+import logging
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from . import config
 
+logging.basicConfig(level=logging.INFO)
 
 db = SQLAlchemy()
 
@@ -19,4 +22,6 @@ def create_app():
     from .main import main_bp
     app.register_blueprint(main_bp)
 
-    return app
+    with app.app_context():
+        db.create_all()
+        return app

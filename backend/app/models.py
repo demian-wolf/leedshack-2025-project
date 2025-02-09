@@ -29,34 +29,39 @@ class User(db.Model):
         issued_at = datetime.utcnow()
         
         payload = {
-            "sub": user_id,
+            "sub": str(user_id),
             "iat": issued_at,
-            "exp": issued_at + timedelta(seconds=5),
+            "exp": issued_at + timedelta(days=1),
         }
 
         return jwt.encode(
             payload,
             current_app.config.get("SECRET_KEY"),
+            algorithm="HS256",
         )
 
     @staticmethod
     def decode_auth_token(token) -> int:
         try:
+            if BlackListedToken.is_blacklisted(token):
+                raise RuntimeError("blacklisted token")
+
             payload = jwt.decode(
                 token,
                 current_app.config.get("SECRET_KEY"),
+                algorithms=["HS256"],
             )
 
             if "sub" not in payload:
-                raise RuntimeError("Invalid token")
+                raise RuntimeError("invalid token")
 
             return payload["sub"]
         
         except jwt.ExpiredSignatureError as e:
-            raise RuntimeError("Signature expired") from e
+            raise RuntimeError("signature has expired") from e
         
         except jwt.PyJWTError as e:
-            raise RuntimeError("Invalid token") from e
+            raise RuntimeError("invalid token") from e
 
 
 class UserProfile(db.Model):
@@ -74,3 +79,11 @@ class BlackListedToken(db.Model):
         db.DateTime,
         nullable=False, default=func.current_timestamp(),
     )
+
+    @staticmethod
+    def is_blacklisted(token: str) -> bool:
+        record = BlackListedToken.query.filter_by(
+            token=token,
+        ).first()
+
+        return record is not None

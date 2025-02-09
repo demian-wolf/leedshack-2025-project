@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import bcrypt
-from flask import current_app, request, make_response, jsonify
+from flask import request, make_response, jsonify
 from flask.views import MethodView
 
 from app import db
@@ -26,14 +26,12 @@ class SignUpView(MethodView):
                     "message": "user already exists",
                 }), 409
 
-            password = bcrypt.hashpw(
-                password,
-                bcrypt.gensalt(current_app.config.get("SALT", 14)),
-            )
+            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+            password = password.decode()
 
             user = User(email=email, password=password)
             
-            db.session.add()
+            db.session.add(user)
             db.session.commit()
 
             return jsonify({
@@ -67,7 +65,11 @@ class LogInView(MethodView):
                     "message": "user does not exist",
                 }), 404
             
-            if not bcrypt.checkpw(user.password, data.get("password")):
+            checkpw = bcrypt.checkpw(
+                data.get("password").encode(), user.password.encode(),
+            )
+
+            if not checkpw:
                 return jsonify({
                     "status": "fail",
                     "message": "invalid password",
@@ -76,8 +78,8 @@ class LogInView(MethodView):
             return jsonify({
                 "status": "success",
                 "message": "logged in",
-                "auth_token": user.encode.auth_token(user.id),
-            }), 201
+                "auth_token": user.encode_auth_token(user.id),
+            })
         
         except Exception as e:
             logging.error(e)
@@ -91,7 +93,7 @@ class LogInView(MethodView):
 class LogOutView(MethodView):
     @staticmethod
     def _auth_token() -> Optional[str]:
-        header = request.headers.get("Authorisation")
+        header = request.headers.get("Authorization")
 
         if header is None:
             return None
@@ -113,18 +115,20 @@ class LogOutView(MethodView):
         if auth_token is None:
             return jsonify({
                 "status": "fail",
-                "message": "invalid auth token",
-            }), 403
+                "message": "invalid token",
+            }), 400
         
+        logging.info(f"logout: {auth_token = }")
+
         try:
             User.decode_auth_token(auth_token)
         except RuntimeError as e:
-            logging.error(e)
+            logging.exception("message")
 
             return jsonify({
                 "status": "fail",
                 "message": str(e),
-            })
+            }), 400
 
         blacklisted = BlackListedToken(token=auth_token)
 
@@ -141,7 +145,7 @@ class LogOutView(MethodView):
             db.session.rollback()
             logging.error(e)
 
-            return {
+            return jsonify({
                 "status": "fail",
                 "message": "error occurred, retry",
-            }
+            }), 500
