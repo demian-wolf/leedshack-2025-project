@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      {!isSignupPage && <Header />}
+      <Header />
 
       <div className={styles.content}>
         <main className={styles.main}>
@@ -43,7 +43,7 @@ const App = () => {
         </main>
       </div>
 
-      {!isSignupPage && <Footer />}
+      <Footer />
     </div>
   );
 };
