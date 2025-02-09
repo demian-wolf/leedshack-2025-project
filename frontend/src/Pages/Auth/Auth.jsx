@@ -25,7 +25,7 @@ export const Auth = () => {
         const data = { email, password };
 
         try {
-            const endpoint = `${location.pathname}/auth`;
+            const endpoint = `/auth${location.pathname}`;
 
             const response = await fetch(`${api_url}${endpoint}`, {
                 method: "POST",
