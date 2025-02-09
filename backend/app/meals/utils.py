@@ -1,7 +1,9 @@
 import json
+from datetime import date
 from typing import Optional
 
 from app import db
+from app.utils import save_user
 from app.models import User, Meal
 
 
@@ -40,3 +42,14 @@ def generate_meal(diet: User.Diet, allergies: list[str], prep_time: list[str]) -
         [m for m in meals if _is_ok(m, diet, allergies)],
         prep_time,
     )
+
+
+def grow_tree(user: User) -> None:
+    try:
+        user.streak_count += 1
+        user.streak_date = date.today()
+    
+        save_user(user)
+    except Exception as e:
+        db.session.rollback()
+        raise
