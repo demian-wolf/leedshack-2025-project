@@ -17,7 +17,7 @@ const Details = () => {
     ];
 
     const selectedMeal = mockMeals.find(meal => meal.id === parseInt(id));
-    setMeal(selectedMeal);
+    setMeal(mockMeals[0]);
   }, [id]);
 
   if (!meal) {
