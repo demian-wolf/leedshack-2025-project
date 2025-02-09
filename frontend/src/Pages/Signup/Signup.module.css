@@ -1,0 +1,115 @@
+@import "../../vars.css";
+
+
+.title{
+    text-decoration: none;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 100px;
+    font-family: var(-font-roboto);
+}
+.container{
+    width: 100%;
+    background-color: var();
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: coloumn;
+    padding: 100px 100px;
+}
+
+.header{
+    text-align: center;
+    margin: 20px 40px;
+    color: var(--color-text);
+}
+
+.box{
+    background-color: var(--color-bg);
+    border-radius: 30px;
+}
+
+.maintext{
+    margin: 20px 0;
+    text-align: center;
+    color: var(--color-text);
+}
+
+.emailbox{
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.emailbox label{
+    padding: 0 10px;
+    color: var(--color-text);
+    
+}
+
+.emailbox input{
+    border-radius: 20px;
+    width: 200px;
+    height: 40px;
+    
+}
+
+.passwordbox{
+    padding: 20px 20px;
+    text-align: center;
+    
+}
+
+.passwordbox label{
+    padding: 0 10px;
+    color: var(--color-text);
+}
+
+.passwordbox input{
+    border-radius: 20px;
+    width: 200px;
+    height: 40px;
+}
+
+::placeholder{
+    text-align: center;
+}
+
+.terms{
+    margin: 20px 0;
+    text-align: center;
+    color: var(--color-text);
+}
+
+.mybuttons{
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    justify-content: center;
+}
+
+.cancelbtn{
+    padding: 3px 3px;
+    margin: 0 50px;
+    background-color: var(--color-text);
+    border: none;
+    z-index: 1;
+    border-radius: 10px;
+    color: #FAF9F6;
+    
+   
+    
+}
+
+.submitbtn{
+    padding: 3px 3px;
+    margin: 15px 50px;
+    border: none;
+    background-color: var(--color-text);
+    border-radius: 10px;
+    color: #FAF9F6;
+}
