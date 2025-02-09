@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
+import { api_url } from "../../config.jsx";
 import styles from "./Auth.module.css";
+
 
 export const Auth = () => {
     const location = useLocation();
     const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -16,32 +20,29 @@ export const Auth = () => {
         if (isLoading) return;
 
         setIsLoading(true);
-        setErrorMessage('');
+        setErrorMessage("");
 
         const data = { email, password };
 
         try {
-            const endpoint = location.pathname === "/login" ? "/auth/login" : "/auth/signup";
-            const response = await fetch(`http://localhost:5000${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const endpoint = `${location.pathname}/auth`;
+
+            const response = await fetch(`${api_url}${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                if (location.pathname === "/login") {
-                    localStorage.setItem('auth_token', result.auth_token);
-                    navigate('/home');
-                } else {
-                    navigate('/login');
-                }
+                localStorage.setItem("auth_token", result.auth_token);
+                navigate("/");
             } else {
-                setErrorMessage(result.message || 'Request failed.');
+                setErrorMessage(result.message || "Request failed.");
             }
         } catch (error) {
-            setErrorMessage('An error occurred. Please try again.');
+            setErrorMessage("Server error. Please try again later.");
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -51,10 +52,14 @@ export const Auth = () => {
     return (
         <div>
             <Link className={styles.title} to="/">Mealio</Link>
+
             <div className={styles.container}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.box}>
-                        <h2 className={styles.header}>{location.pathname === "/login" ? "Login" : "Sign Up"}</h2>
+                        <h2 className={styles.header}>
+                            {location.pathname === "/login" ? "Login" : "Sign Up"}
+                        </h2>
+                        
                         <p className={styles.maintext}>
                             {location.pathname === "/login"
                                 ? "Please enter your credentials to log in."
@@ -64,7 +69,6 @@ export const Auth = () => {
                         {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
                         <div className={styles.emailbox}>
-                            <label htmlFor="email"><b>Email:</b></label>
                             <input
                                 type="text"
                                 placeholder="Enter Email"
@@ -76,7 +80,6 @@ export const Auth = () => {
                         </div>
 
                         <div className={styles.passwordbox}>
-                            <label htmlFor="password"><b>Password:</b></label>
                             <input
                                 type="password"
                                 placeholder="Enter Password"
@@ -94,7 +97,6 @@ export const Auth = () => {
                         )}
 
                         <div className={styles.mybuttons}>
-                            <button className={styles.cancelbtn} type="button" onClick={() => navigate('/')}>Cancel</button>
                             <button className={styles.submitbtn} type="submit" disabled={isLoading}>
                                 {isLoading ? (location.pathname === "/login" ? 'Logging in...' : 'Signing up...') : (location.pathname === "/login" ? 'Login' : 'Sign Up')}
                             </button>
@@ -102,7 +104,7 @@ export const Auth = () => {
 
                         {location.pathname === "/login" && (
                             <div className={styles.mybuttons}>
-                                <p>Don't have an account? <Link to="/signup" style={{ color: 'dodgerblue' }}>Sign Up</Link></p>
+                                <p>No account? <Link to="/signup" style={{ color: 'dodgerblue' }}>Sign Up</Link>!</p>
                             </div>
                         )}
                         {location.pathname === "/signup" && (
