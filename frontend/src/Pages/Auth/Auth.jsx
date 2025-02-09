@@ -90,12 +90,6 @@ export const Auth = () => {
                             />
                         </div>
 
-                        {location.pathname === "/login" && (
-                            <div className={styles.terms}>
-                                <p>Forgot your password? <a href="#" style={{ color: 'dodgerblue' }}>Reset here</a>.</p>
-                            </div>
-                        )}
-
                         <div className={styles.mybuttons}>
                             <button className={styles.submitbtn} type="submit" disabled={isLoading}>
                                 {isLoading ? (location.pathname === "/login" ? 'Logging in...' : 'Signing up...') : (location.pathname === "/login" ? 'Login' : 'Sign Up')}
@@ -104,12 +98,12 @@ export const Auth = () => {
 
                         {location.pathname === "/login" && (
                             <div className={styles.mybuttons}>
-                                <p>No account? <Link to="/signup" style={{ color: 'dodgerblue' }}>Sign Up</Link>!</p>
+                                <p>No account? <Link to="/signup" style={{ color: 'dodgerblue' }}>Sign up</Link>!</p>
                             </div>
                         )}
                         {location.pathname === "/signup" && (
                             <div className={styles.mybuttons}>
-                                <p>Already have an account? <Link to="/login" style={{ color: 'dodgerblue' }}>Login</Link></p>
+                                <p>Already have an account? <Link to="/login" style={{ color: 'dodgerblue' }}>Log in</Link>!</p>
                             </div>
                         )}
                     </div>
