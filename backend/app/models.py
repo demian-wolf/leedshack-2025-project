@@ -119,3 +119,57 @@ class BlackListedToken(db.Model):
         ).first()
 
         return record is not None
+
+
+meal_ingredient = db.Table(
+    'meal_ingredient',
+    db.Column('meal_id', db.Integer, db.ForeignKey('meal.id'), primary_key=True),
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id'), primary_key=True),
+    db.Column('measure', db.String(50))
+)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    thumbnail = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    
+    meals = db.relationship('Meal', backref='category', lazy=True)
+
+class Area(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    
+    meals = db.relationship('Meal', backref='area', lazy=True)
+
+class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+
+class Meal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    area_id = db.Column(db.Integer, db.ForeignKey('area.id'), nullable=False)
+    prep_time = db.Column(db.Integer, nullable=True)
+    instructions = db.Column(db.Text, nullable=False)
+    thumbnail = db.Column(db.String(255), nullable=True)
+    tags = db.Column(db.String(255), nullable=True)
+
+    ingredients = db.relationship('Ingredient', secondary=meal_ingredient, backref=db.backref('meals', lazy='dynamic'))
+
+    def to_dict(self) -> None:
+        return {
+            "id": self.id,
+            "name": self.name,
+
+            "prep_time": self.prep_time,
+            "instructions": self.instructions,
+
+            "thumbnail": self.thumbnail,
+            "ingredients": [i.name for i in self.ingredients],
+        }
+
+    # TODO: add .allergens
+    # TODO: add .diet
