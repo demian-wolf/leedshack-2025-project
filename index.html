@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjustable Layer Dynamic Tree</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            background-image: url('./grass.jpg'); /* Use your image as a background */
+            background-size: cover;
+            border: 1px solid #ddd;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            margin: 10px;
+        }
+        input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+        }
+        button {
+            padding: 5px 15px;
+            margin: 5px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .reset {
+            background: #d9534f;
+        }
+        .reset:hover {
+            background: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌳 Adjustable Layer Fixed Tree 🌳</h1>
+
+    <div class="controls">
+        <label for="treeDepth">Depth:</label>
+        <input type="number" id="treeDepth" min="1" max="30" value="1">
+        <button onclick="generateTree()">Generate Tree</button>
+        <button class="reset" onclick="resetTree()">Reset Tree</button>
+    </div>
+
+    <!-- Canvas that uses an image as a background -->
+    <canvas id="treeCanvas" width="850" height="500"></canvas>
+
+    <script src="tree.js"></script>
+
+</body>
+</html>
