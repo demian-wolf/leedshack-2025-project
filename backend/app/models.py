@@ -53,9 +53,6 @@ class User(db.Model):
     @staticmethod
     def decode_auth_token(token) -> int:
         try:
-            if BlackListedToken.is_blacklisted(token):
-                raise RuntimeError("blacklisted token")
-
             payload = jwt.decode(
                 token,
                 current_app.config.get("SECRET_KEY"),
@@ -63,15 +60,15 @@ class User(db.Model):
             )
 
             if "sub" not in payload:
-                raise RuntimeError("invalid token")
+                raise RuntimeError
 
             return payload["sub"]
         
         except jwt.ExpiredSignatureError as e:
-            raise RuntimeError("signature has expired") from e
+            raise RuntimeError from e
         
         except jwt.PyJWTError as e:
-            raise RuntimeError("invalid token") from e
+            raise RuntimeError from e
 
 
 class BlackListedToken(db.Model):
