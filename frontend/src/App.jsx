@@ -5,7 +5,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import { Auth } from "./Pages/Auth/Auth"
 import { Home } from "./Pages/Home/Home";
-import { Monday } from "./Pages/Monday/Monday";
+import { Day } from "./Pages/Day/Day";
 import SelectTags from "./Pages/SelectTags/SelectTags";
 import Details from "./Pages/Details/Details";
 
@@ -33,7 +33,7 @@ const App = () => {
             <Route path="/login" element={<Auth/>}/>
             <Route path="/signup" element={<Auth/>}/>
             
-            <Route path="/Monday" element={<Monday/>}/>
+            <Route path="/day/:id" element={<Day/>}/>
             <Route path="/selectTags" element={<SelectTags/>}/>
             <Route path="/details/:id" element={<Details/>}/>
           </Routes>

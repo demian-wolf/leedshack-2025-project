@@ -9,13 +9,13 @@ export const Home = () => {
         <div className={styles.menu}>
             
             <ul className={styles.menuItems}>
-                <li><a href="/monday">Monday</a></li>
-                <li><a href="/tuesday">Tuesday</a></li>
-                <li><a href="/wednesday">Wednesday</a></li>
-                <li><a href="/thursday">Thursday</a></li>
-                <li><a href="/friday">Friday</a></li>
-                <li><a href="/saturday">Saturday</a></li>
-                <li><a href="/sunday">Sunday</a></li>
+                <li><a href="/day/0/">Monday</a></li>
+                <li><a href="/day/1/">Tuesday</a></li>
+                <li><a href="/day/2/">Wednesday</a></li>
+                <li><a href="/day/3/">Thursday</a></li>
+                <li><a href="/day/4/">Friday</a></li>
+                <li><a href="/day/5/">Saturday</a></li>
+                <li><a href="/day/6/">Sunday</a></li>
             </ul>
         </div>
         </div>
@@ -33,7 +33,5 @@ export const Home = () => {
         </div>
     
     </div>
-
-
     )
 };
