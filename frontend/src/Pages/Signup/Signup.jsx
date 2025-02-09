@@ -1,7 +1,6 @@
 import React from "react";
 
 import styles from "./Signup.module.css";
-import { getImageUrl } from "../../utils";
 import {Link} from "react-router-dom";
 
 
