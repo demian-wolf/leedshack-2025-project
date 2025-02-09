@@ -3,7 +3,8 @@ import styles from './App.module.css';
 
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import { Auth } from "./Pages/Auth/Auth"
+import { About } from "./Pages/About/About";
+import { Auth } from "./Pages/Auth/Auth";
 import { Home } from "./Pages/Home/Home";
 import { Day } from "./Pages/Day/Day";
 import SelectTags from "./Pages/SelectTags/SelectTags";
@@ -27,8 +28,10 @@ const App = () => {
       <div className={styles.content}>
         <main className={styles.main}>
           <Routes>
-            <Route path="/" element={<Home/>} />
             <Route path="/MainContent" element={<MainContent/>}/>
+            
+            <Route path="/" element={<Home/>} />
+            <Route path="/about" element={<About/>}/>
 
             <Route path="/login" element={<Auth/>}/>
             <Route path="/signup" element={<Auth/>}/>
