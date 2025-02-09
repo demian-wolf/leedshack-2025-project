@@ -1,0 +1,125 @@
+@import "../../vars.css";
+
+.title {
+    text-decoration: none;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 48px;
+    font-family: var(--font-roboto);
+    background-color: var(--color-bg);
+    margin-top: 20px;
+}
+
+.container {
+    width: 100%;
+    background-color: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 50px 30px;
+}
+
+.box {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--color-text);
+    font-size: 32px;
+}
+
+.maintext {
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--color-text);
+    font-size: 16px;
+}
+
+.emailbox,
+.passwordbox {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.emailbox label,
+.passwordbox label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-placeholder);
+    font-size: 14px;
+}
+
+.emailbox input,
+.passwordbox input {
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    height: 40px;
+    padding: 0 15px;
+    margin-top: 5px;
+    border: 1px solid var(--color-border);
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.emailbox input:focus,
+.passwordbox input:focus {
+    outline: none;
+    border-color: var(--color-text);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+::placeholder {
+    color: var(--color-placeholder);
+    text-align: center;
+}
+
+.terms {
+    margin-top: 10px;
+    text-align: center;
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.mybuttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-top: 20px; 
+}
+
+.cancelbtn,
+.submitbtn {
+    padding: 10px 30px;
+    background-color: var(--color-text);
+    border: none;
+    border-radius: 25px;
+    color: #FAF9F6;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancelbtn:hover,
+.submitbtn:hover {
+    background-color: var(--color-hover);
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
