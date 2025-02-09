@@ -1,10 +1,13 @@
+from enum import Enum
 from datetime import datetime, timedelta
+import json
 
 import jwt
 from sqlalchemy import func
 from flask import current_app
 
 from . import db
+from app.exceptions import ValidationError
 
 
 class User(db.Model):
@@ -14,15 +17,54 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     
     created_at = db.Column(
-        db.DateTime,
-        nullable=False, default=func.current_timestamp(),
+        db.DateTime, default=func.current_timestamp(),
+        nullable=False,
     )
 
-    profile_id = db.Column(
-        db.Integer, db.ForeignKey("user_profile.id"),
-        nullable=True,
-    )
-    profile = db.relationship("UserProfile", backref="users")
+    name = db.Column(db.String(255), default="", nullable=False)
+    
+    streak_count = db.Column(db.Integer, default=0, nullable=False)
+    streak_date = db.Column(db.Date, default=func.current_date(), nullable=False)
+
+    class Diet(Enum):
+        NONE = "NONE"
+
+        VEGETARIAN = "VEGETARIAN"
+        VEGAN = "VEGAN"
+
+        HALAL = "HALAL"
+
+    diet = db.Column(db.Enum(Diet), default=Diet.NONE, nullable=False)
+    allergies = db.Column(db.String(255), default="[]", nullable=False)
+
+    def _validate_allergies(self) -> None:
+        try:
+            data = json.loads(self.allergies)
+        except json.JSONDecodeError as e:
+            raise ValidationError("invalid allergies format") from e
+        
+        try:
+            data = set(data)
+        except TypeError as e:  # unhashable type
+            raise ValidationError("invalid allergies format") from e
+
+        if not data.issubset({"gluten", "lactose", "nuts", "seafood"}):
+            raise ValidationError("invalid allergies format")
+
+    def validate(self) -> None:
+        if not self.email:
+            raise ValidationError("email required")
+
+        if "@" not in self.email:
+            raise ValidationError("invalid email format")
+        
+        if self.streak_count < 0:
+            raise ValidationError("negative streak not allowed")
+        
+        if self.diet not in User.Diet:
+            raise ValidationError("invalid diet value, expected 0-3")
+        
+        self._validate_allergies()
 
     @staticmethod
     def encode_auth_token(user_id: int) -> str:
@@ -43,9 +85,6 @@ class User(db.Model):
     @staticmethod
     def decode_auth_token(token) -> int:
         try:
-            if BlackListedToken.is_blacklisted(token):
-                raise RuntimeError("blacklisted token")
-
             payload = jwt.decode(
                 token,
                 current_app.config.get("SECRET_KEY"),
@@ -53,22 +92,15 @@ class User(db.Model):
             )
 
             if "sub" not in payload:
-                raise RuntimeError("invalid token")
+                raise RuntimeError
 
             return payload["sub"]
         
         except jwt.ExpiredSignatureError as e:
-            raise RuntimeError("signature has expired") from e
+            raise RuntimeError from e
         
         except jwt.PyJWTError as e:
-            raise RuntimeError("invalid token") from e
-
-
-class UserProfile(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    name = db.Column(db.String(255), nullable=False)
-
-    user = db.relationship("User", back_populates="profile")
+            raise RuntimeError from e
 
 
 class BlackListedToken(db.Model):
@@ -77,7 +109,7 @@ class BlackListedToken(db.Model):
     
     created_at = db.Column(
         db.DateTime,
-        nullable=False, default=func.current_timestamp(),
+        default=func.current_timestamp(),
     )
 
     @staticmethod

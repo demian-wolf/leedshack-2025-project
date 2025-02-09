@@ -1,13 +1,11 @@
-from flask import Blueprint
-from . import db
+from flask import Blueprint, jsonify
 
 main_bp = Blueprint("main", __name__)
 
+
 @main_bp.route("/")
 def index():
-    return "hello world"
-
-
-@main_bp.route("/profile")
-def profile():
-    return "profile stub"
+    return jsonify(
+        status="success",
+        message="ok",
+    )
