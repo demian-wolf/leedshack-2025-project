@@ -7,7 +7,7 @@ from app.utils import save_user
 from app.models import User, Meal
 
 
-def _closest(meals: list[Meal], prep_time: int):
+def _closest(meals: list, prep_time: int):
     out = None
     closest_diff = float("inf")
     
@@ -21,21 +21,22 @@ def _closest(meals: list[Meal], prep_time: int):
     return out
 
 
-def _is_ok(meal: Meal, diet: User.Diet, allergies: list[str]):
-    m_allergies = json.loads(meal.allergies)
-
-    if set(m_allergies).intersection(allergies):
-        return False
-    
-    if (meal.diet is not None) and (meal.diet != User.Diet.NONE):
-        if meal.diet != diet:
+def _is_ok(meal: Meal, diet: str, allergies: list):
+    for a in allergies:
+        if meal.contains_allergen(a):
             return False
     
+    if diet == "VEGAN":
+        return meal.is_vegan()
+    
+    if diet == "VEGETARIAN":
+        return meal.is_vegetarian()
+
     return True
 
 
-def generate_meal(diet: User.Diet, allergies: list[str], prep_time: list[str]) -> Optional[Meal]:
-    meals = db.session.query(Meal).all()
+def generate_meal(diet: User.Diet, allergies, prep_time) -> Optional[Meal]:
+    meals = Meal.query.all()
     # inefficient but ok...
 
     return _closest(

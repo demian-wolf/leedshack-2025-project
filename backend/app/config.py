@@ -5,7 +5,7 @@ class BaseConfig:
     SECRET_KEY = os.getenv("SECRET_KEY", "spameggfoobar")
     SALT = 14
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///backend.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///backend2.db"
 
 
 class DevConfig(BaseConfig):

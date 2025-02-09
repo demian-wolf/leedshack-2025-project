@@ -12,7 +12,7 @@ class GenerateMealView(MethodView):
 
         meal = generate_meal(
             data["diet"], data["allergies"],
-            data["cooking_time"],
+            data["prep_time"],
         )
 
         if meal is None:

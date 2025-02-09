@@ -25,6 +25,9 @@ def create_app():
     from .profile import profile_bp
     app.register_blueprint(profile_bp)
 
+    from .meals import meals_bp
+    app.register_blueprint(meals_bp)
+
     with app.app_context():
         db.create_all()
         return app

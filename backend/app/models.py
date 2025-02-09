@@ -159,17 +159,61 @@ class Meal(db.Model):
 
     ingredients = db.relationship('Ingredient', secondary=meal_ingredient, backref=db.backref('meals', lazy='dynamic'))
 
-    def to_dict(self) -> None:
+    def to_dict(self) -> dict:
         return {
-            "id": self.id,
             "name": self.name,
-
             "prep_time": self.prep_time,
             "instructions": self.instructions,
-
             "thumbnail": self.thumbnail,
+            "tags": self.tags,
             "ingredients": [i.name for i in self.ingredients],
         }
 
-    # TODO: add .allergens
-    # TODO: add .diet
+    # Methods to dynamically determine dietary categories
+    def is_vegan(self):
+        category = Category.query.get(self.category_id)
+        return category.name.lower() == 'vegan'
+
+    def is_vegetarian(self):
+        category = Category.query.get(self.category_id)
+        return category.name.lower() == 'vegetarian'
+
+    def is_seafood(self):
+        category = Category.query.get(self.category_id)
+        return category.name.lower() == 'seafood'
+
+    # Method to dynamically check for allergens
+    def contains_nuts(self):
+        nut_ingredients = ['almond', 'cashew', 'walnut', 'peanut', 'pecan', 'hazelnut', 'pistachio']
+        for ingredient in self.ingredients:
+            if any(nut in ingredient.name.lower() for nut in nut_ingredients):
+                return True
+        return False
+
+    def contains_allergen(self, allergen_name):
+        if allergen_name == "nuts":
+            return self.contains_nuts()
+        
+        if allergen_name == "seafood":
+            return self.is_seafood()
+
+        for allergen in self.allergens:
+            if allergen.name.lower() == allergen_name.lower():
+                return True
+        return False
+
+
+    # Hardcoded list of allergens
+    allergens_list = [
+        "Chicken", "Salmon", "Beef", "Pork", "Avocado", "Eggs", 
+        "Lamb", "Ginger", "Tomatoes", "Bacon", "Garlic", 
+        "Yeasts", "Basil", "Carrots", "Basmati", "soya", 
+        "Lemon", "Mushrooms", "Prawns", "Fish"
+    ]
+
+    def contains_allergen(self, allergen_name):
+        for ingredient in self.ingredients:
+            if allergen_name.lower() in ingredient.name.lower():
+                return True
+        return False
+
