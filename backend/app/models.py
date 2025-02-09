@@ -1,3 +1,4 @@
+from enum import Enum
 from datetime import datetime, timedelta
 
 import jwt
@@ -10,19 +11,28 @@ from . import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
     
     created_at = db.Column(
-        db.DateTime,
-        nullable=False, default=func.current_timestamp(),
+        db.DateTime, default=func.current_timestamp(),
     )
 
-    profile_id = db.Column(
-        db.Integer, db.ForeignKey("user_profile.id"),
-        nullable=True,
-    )
-    profile = db.relationship("UserProfile", backref="users")
+    name = db.Column(db.String(255))
+    
+    streak_count = db.Column(db.Integer, default=0)
+    streak_date = db.Column(db.Date, default=func.current_date())
+
+    class Diet(Enum):
+        NONE = 0
+
+        VEGETARIAN = 1
+        VEGAN = 2
+
+        HALAL = 3
+
+    diet = db.Column(db.Enum(Diet), default=Diet.NONE)
+    allergies = db.Column(db.String(255), default="[]")
 
     @staticmethod
     def encode_auth_token(user_id: int) -> str:
@@ -64,20 +74,13 @@ class User(db.Model):
             raise RuntimeError("invalid token") from e
 
 
-class UserProfile(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    name = db.Column(db.String(255), nullable=False)
-
-    user = db.relationship("User", back_populates="profile")
-
-
 class BlackListedToken(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    token = db.Column(db.String(500), unique=True, nullable=False)
+    token = db.Column(db.String(500), unique=True)
     
     created_at = db.Column(
         db.DateTime,
-        nullable=False, default=func.current_timestamp(),
+        default=func.current_timestamp(),
     )
 
     @staticmethod
